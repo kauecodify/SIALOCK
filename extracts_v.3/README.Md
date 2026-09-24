@@ -235,7 +235,7 @@ python extract.py --headless --config config.json
 --cat COL1 COL2 ...         Categorical columns
 --num COL1 COL2 ...         Numerical columns
 ```
-
+ 
 #### Neural Network
 
 ```
