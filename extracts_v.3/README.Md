@@ -1,9 +1,5 @@
 # EXTRACT V.3
 
-## Pipeline de Extracao, Enriquecimento, Risco e Treino Neural
-
-**Version:** 3.1
-
 **Overview:** EXTRACT V.3 is a comprehensive machine learning pipeline designed for data extraction, enrichment, risk scoring, and continuous training with neural network support. The application processes large datasets, enriches CNPJ records via external APIs, calculates business KPIs, trains ensemble and neural network models, and outputs risk assessments in structured formats.
 
 ---
@@ -186,7 +182,7 @@ mkdir -p dados saida cache_externo historico logs
 ### Interactive Mode
 
 ```bash
-python extract.py
+python extract_v3.py
 ```
 
 Follow the menu prompts to select:
