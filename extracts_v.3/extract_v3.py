@@ -1,6 +1,6 @@
 # =====================================================================
 #  EXTRACT V.3  ·  Pipeline de Extracao, Enriquecimento, Risco e Treino Neural
-#  V.3
+#  V.3 
 # =====================================================================
 from __future__ import annotations
 
