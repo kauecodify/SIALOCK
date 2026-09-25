@@ -2,7 +2,7 @@
 
 **Overview:** EXTRACT V.3 is a comprehensive machine learning pipeline designed for data extraction, enrichment, risk scoring, and continuous training with neural network support. The application processes large datasets, enriches CNPJ records via external APIs, calculates business KPIs, trains ensemble and neural network models, and outputs risk assessments in structured formats.
 
----
+--- 
 
 ## Table of Contents
 
