@@ -242,15 +242,13 @@ O pipeline principal integra todos os modulos para processar as bases de dados d
 ### Passo 1: Clonar o Repositorio
 
 ```bash
-cd /workspace
+git clone https://github.com/kauecodify/SIALOCK.git
+cd SIALOCK/SIALOCK_T24_G3
 ```
-
-O projeto ja esta clonado em `/workspace/SIALOCK_T24_G3`
 
 ### Passo 2: Instalar Dependencias
 
 ```bash
-cd /workspace/SIALOCK_T24_G3
 pip install -r requirements.txt
 ```
 
@@ -259,13 +257,13 @@ pip install -r requirements.txt
 Defina a variavel PYTHONPATH para que os modulos sejam encontrados:
 
 ```bash
-export PYTHONPATH=/workspace/SIALOCK_T24_G3:$PYTHONPATH
+export PYTHONPATH=$(pwd):$PYTHONPATH
 ```
 
 Ou execute os comandos com PYTHONPATH explicitamente:
 
 ```bash
-PYTHONPATH=/workspace/SIALOCK_T24_G3 python scripts/validar_modulos.py
+PYTHONPATH=$(pwd) python scripts/validar_modulos.py
 ```
 
 ## Execucao do Projeto
@@ -275,7 +273,7 @@ PYTHONPATH=/workspace/SIALOCK_T24_G3 python scripts/validar_modulos.py
 Para validar que todos os modulos estao funcionando corretamente:
 
 ```bash
-PYTHONPATH=/workspace/SIALOCK_T24_G3 python scripts/validar_modulos.py
+PYTHONPATH=$(pwd) python scripts/validar_modulos.py
 ```
 
 Este script:
@@ -284,32 +282,91 @@ Este script:
 3. Testa o modulo de Calibracao (ECE, Brier Score)
 4. Testa o modulo Synthetic (K-Anonymity, DCR, Taxa de Divulgacao)
 
+Saida esperada:
+```
+[i] Parquet: /tmp/sialock_.../dados.parquet (5000 linhas)
+
+=== 1) DuckDB ===
+total_registros  cnpjs_unicos  ncms_distintos  paises_distintos  vmle_medio  ...
+5000            5000             3                 3        5022.12  ...
+Top-K grupos: 15 linhas
+
+=== 2) Calibracao ===
+Metodo: isotonic | ECE 0.0524 -> 0.0000
+
+=== 3) Synthetic + K-Anonymity ===
+{
+  "k_anonymity": {"k_min_original": 163, "k_min_sintetico": 145, ...},
+  "dcr": {"dcr_min": null, "dcr_med": null, "dcr_p05": null},
+  "divulgacao": {"taxa_divulgacao_pct": 0.0}
+}
+[ok] Tudo funcionando.
+```
+
 ### Execucao dos Testes
 
 Para executar todos os testes unitarios:
 
 ```bash
-PYTHONPATH=/workspace/SIALOCK_T24_G3 python -m pytest tests/ -v
+PYTHONPATH=$(pwd) python -m pytest tests/ -v
 ```
 
 Este comando executa 12 testes distribuidos em 3 arquivos:
-- test_duckdb_backend.py: 3 testes
-- test_calibration.py: 3 testes
-- test_synthetic.py: 6 testes
+- test_duckdb_backend.py: 3 testes (KPIs, Top-K, Streaming)
+- test_calibration.py: 3 testes (metricas, calibradores, auto-calibracao)
+- test_synthetic.py: 6 testes (copula, categorias, K-Anon, DCR, divulgacao)
+
+Saida esperada:
+```
+============================= test session starts ==============================
+tests/test_calibration.py::test_metricas_basicas PASSED              [  8%]
+tests/test_calibration.py::test_calibradores_isolados PASSED             [ 16%]
+tests/test_calibration.py::test_auto_calibrator_reduz_ece PASSED         [ 25%]
+tests/test_duckdb_backend.py::test_register_and_kpis PASSED              [ 33%]
+tests/test_duckdb_backend.py::test_topk PASSED                           [ 41%]
+tests/test_duckdb_backend.py::test_streaming_batches PASSED              [ 50%]
+tests/test_synthetic.py::test_copula_preserva_marginais PASSED           [ 58%]
+tests/test_synthetic.py::test_copula_preserva_categorias PASSED          [ 66%]
+tests/test_synthetic.py::test_k_anonymity_validador PASSED               [ 75%]
+tests/test_synthetic.py::test_gerar_e_validar PASSED                     [ 83%]
+tests/test_synthetic.py::test_dcr_zero_quando_copia PASSED               [ 91%]
+tests/test_synthetic.py::test_divulgacao_detecta_grupos_unicos PASSED    [100%]
+============================== 12 passed in 1.18s =======================
+```
 
 ### Processamento das Bases de Dados
 
 Para processar uma base de dados especifica:
 
 ```bash
-PYTHONPATH=/workspace/SIALOCK_T24_G3 python gate3/extract_v3.4.py --base base2 --backend duckdb --resume
+PYTHONPATH=$(pwd) python gate3/extract_v3.4.py --base base2 --backend duckdb --resume
 ```
 
 Ou como modulo:
 
 ```bash
-PYTHONPATH=/workspace/SIALOCK_T24_G3 python -m gate3.extract_v3.4 --base base2 --backend duckdb --resume
+PYTHONPATH=$(pwd) python -m gate3.extract_v3.4 --base base2 --backend duckdb --resume
 ```
+
+#### Argumentos do Pipeline:
+- `--base`: Base a processar (base2 ou base3)
+- `--backend`: Backend a usar (auto, duckdb, pandas)
+- `--resume`: Retomar processamento a partir do checkpoint
+
+#### Estrutura de Dados Esperada:
+```
+SIALOCK_T24_G3/
+├── data/
+│   ├── base2/
+│   │   └── entrada/          # Arquivos Parquet/CSV da base 2
+│   └── base3/
+│       └── entrada/          # Arquivos Parquet/CSV da base 3
+```
+
+#### Artefatos Gerados:
+- `data/baseX/kpis_duckdb.json`: KPIs agregados
+- `data/baseX/calibracao.json`: Relatorio de calibracao
+- `data/baseX/k_anonymity_report.json`: Relatorio de K-Anonymity
 
 #### Argumentos:
 
