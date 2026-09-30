@@ -62,6 +62,16 @@ Modulo para geracao de dados sinteticos que preservam as caracteristicas dos dad
 
 ## Como Usar o Gate 3
 
+```
+Como Rodar SEM ERROS:
+1. Processar um único CNPJ:
+cd SIALOCK/SIALOCK_T24_G3
+PYTHONPATH=$(pwd) python cnpj_razao.py --cnpj 00000000000191 --razao "RAZAO SOCIAL LTDA"
+2. Processar arquivo com múltiplos CNPJs:
+cd SIALOCK/SIALOCK_T24_G3
+PYTHONPATH=$(pwd) python cnpj_razao.py --arquivo entrada.txt
+```
+
 ### Instalacao
 
 ```bash
