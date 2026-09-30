@@ -374,12 +374,12 @@ Para processar CNPJ e Razao Social individualmente, mostrando descobertas no ter
 
 #### Processar um unico CNPJ:
 ```bash
-PYTHONPATH=$(pwd) python gate3/processar_cnpj_razao.py --cnpj 00000000000191 --razao "RAZAO SOCIAL LTDA"
+PYTHONPATH=$(pwd) python cnpj_razao.py --cnpj 00000000000191 --razao "RAZAO SOCIAL LTDA"
 ```
 
 #### Processar arquivo com multiplos CNPJs:
 ```bash
-PYTHONPATH=$(pwd) python gate3/processar_cnpj_razao.py --arquivo entrada.txt
+PYTHONPATH=$(pwd) python cnpj_razao.py --arquivo entrada.txt
 ```
 
 #### Formato do arquivo de entrada:
