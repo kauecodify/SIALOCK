@@ -368,6 +368,65 @@ SIALOCK_T24_G3/
 - `data/baseX/calibracao.json`: Relatorio de calibracao
 - `data/baseX/k_anonymity_report.json`: Relatorio de K-Anonymity
 
+### Processamento Individual de CNPJ e Razao Social
+
+Para processar CNPJ e Razao Social individualmente, mostrando descobertas no terminal e gerando saida em TXT:
+
+#### Processar um unico CNPJ:
+```bash
+PYTHONPATH=$(pwd) python gate3/processar_cnpj_razao.py --cnpj 00000000000191 --razao "RAZAO SOCIAL LTDA"
+```
+
+#### Processar arquivo com multiplos CNPJs:
+```bash
+PYTHONPATH=$(pwd) python gate3/processar_cnpj_razao.py --arquivo entrada.txt
+```
+
+#### Formato do arquivo de entrada:
+```
+# Comentario (opcional)
+00000000000191;RAZAO SOCIAL LTDA
+12345678000100;OUTRA EMPRESA S/A
+98765432000111;EMPRESA TESTE ME
+```
+
+#### Saida Gerada:
+- **Terminal**: Mostra descobertas em tempo real para cada CNPJ
+- **Arquivo TXT**: `saida_cnpj_razao_social.txt` com relatorio completo
+
+#### Exemplo de Saida no Terminal:
+```
+============================================================
+Processando: 00000000000191 - RAZAO SOCIAL LTDA
+============================================================
+
+[CNPJ] 00000000000191
+  ✓ Valido: 00.000.000/0001-91
+
+[RAZAO SOCIAL] RAZAO SOCIAL LTDA
+  Tipo: Ltda
+  Palavras: 3
+  Tamanho: 18 caracteres
+
+[DUCKDB]
+  VMLE Medio: R$ 5022.12
+  Total Registros: 1000
+  Outliers: 5
+
+[SYNTHETIC]
+  K-Min Original: 163
+  K-Min Sintetico: 145
+  Passou K-Anonymity: True
+  Taxa Divulgacao: 0.0%
+
+[CALIBRACAO]
+  Metodo: isotonic
+  ECE Antes: 0.0524
+  ECE Depois: 0.0000
+
+============================================================
+```
+
 #### Argumentos:
 
 - `--base`: Base a processar (base2 ou base3)
